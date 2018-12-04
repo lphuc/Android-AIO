@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Material Theme style 1-->
+    <color name="colorPrimary">#125688</color>
+    <color name="colorPrimaryDark">#125688</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#c8e8ff</color>
+
+    <!--Material Theme style 2-->
+    <color name="colorPrimary2">#F50057</color>
+    <color name="colorPrimaryDark2">#C51162</color>
+    <color name="textColorPrimary2">#FFFFFF</color>
+    <color name="windowBackground2">#FFFFFF</color>
+    <color name="navigationBarColor2">#000000</color>
+    <color name="colorAccent2">#FF80AB</color>
+</resources>

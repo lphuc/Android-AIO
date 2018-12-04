@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:id="@+id/cardview_movie_holder"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:padding="@dimen/default_padding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_movie"
+            android:layout_width="50dp"
+            android:background="@drawable/ic_imdb"
+            android:layout_height="50dp" />
+        <TextView
+            style="@style/CodeFont"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/tv_imdb_score"
+            android:layout_toEndOf="@id/img_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="imdb:7.5"/>
+
+        <TextView
+            style="@style/CodeFont"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/tv_meta_score"
+            android:layout_below="@id/tv_imdb_score"
+            android:layout_toEndOf="@id/img_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="meta:6.5"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
