@@ -2,6 +2,7 @@ package com.example.phucengineer.retrofitsample.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /*
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * @SerializedName annotation is used to specify the name of the field that’s in the JSON Response.
  */
-public class ResourceResponse {
+public class ResourceResponse implements Serializable {
     @SerializedName("page")
     private Integer page;
 
@@ -28,7 +29,7 @@ public class ResourceResponse {
     private List<Resource> list;
 
 
-    private class Resource {
+    private class Resource implements Serializable {
         @SerializedName("id")
         private Integer id;
 

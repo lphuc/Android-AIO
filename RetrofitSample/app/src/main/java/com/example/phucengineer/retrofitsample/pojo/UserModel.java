@@ -2,10 +2,19 @@ package com.example.phucengineer.retrofitsample.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
-/*
- * Created by lhphuc on 10/2/2018.
+import java.io.Serializable;
+
+/**
+ * <p>
+ *   Serializable is just a maker interface (has no variable or method)
+ *  It is used to mark java classes so that objects of these classes can get certain capability
+ *  if a parent class has implemented Serializable interface then child class doesn't need to implement. but vice versa is not true
+ *  Only non-static data members are saved via Serialization process
+ *  Constructor of object will not be called when an object is deserialized
+ * </p>
+ * @author phuc
  */
-public class UserModel {
+public class UserModel implements Serializable {
 
     @SerializedName("id")
     private Integer id;
@@ -47,4 +56,5 @@ public class UserModel {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
 }

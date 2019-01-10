@@ -15,8 +15,6 @@ import com.example.phucengineer.retrofitsample.pojo.UserModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -24,16 +22,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     MainAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
-    List<UserModel> personalList = new ArrayList<>();
-
-    APIInterface apiInterface;
+    List<UserModel> userList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        fetchData();
+        initData();
     }
 
     private void initView() {
@@ -47,39 +43,95 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         rcvMain.setItemAnimator(new DefaultItemAnimator());
         rcvMain.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        adapter = new MainAdapter(this, personalList);
+        adapter = new MainAdapter(this, rcvMain);
         rcvMain.setAdapter(adapter);
         rcvMain.setNestedScrollingEnabled(false);
-    }
 
-    private void fetchData() {
-        // instantiate  APIClient
-        apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<UserListResponse> call = apiInterface.getListUser(String.valueOf(2));
-        call.enqueue(new Callback<UserListResponse>() {
+        adapter.setLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onResponse(Call<UserListResponse> call, Response<UserListResponse> response) {
-                Toast.makeText(getApplicationContext(), "Fetch new data successfully!", Toast.LENGTH_SHORT).show();
-                personalList.addAll(response.body().getListUser());
-                swipeRefreshLayout.setRefreshing(false);
-                adapter.setData(personalList);
+            public void onLoadMore() {
+                // add null, so the adapter will check view type and show progress bar at bottom
+                userList.add(null);
+                adapter.notifyDataSetChanged();
 
-            }
+                adapter.currentPage++;
+                loadMoreData(adapter.currentPage);
 
-            @Override
-            public void onFailure(Call<UserListResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
+    public void initData() {
+        new UserRequest.Builder()
+                .setPage("0")
+                .create()
+                .getListUser(this, new APIClient.OnResponse<UserListResponse>() {
+                    @Override
+                    public void onRequestComplete(Response<UserListResponse> response) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Fetch new data successfully!", Toast.LENGTH_SHORT).show();
+
+                            userList.clear();
+                            for (UserModel model : response.body().getListUser()) {
+                                userList.add(model);
+                            }
+
+                            adapter.totalPage = response.body().getTotalPages();
+                            adapter.setData(userList);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onRequestFailed(Throwable error) {
+                        Toast.makeText(getApplicationContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+    }
+
+    public void loadMoreData(int page) {
+        new UserRequest.Builder()
+                .setPage(String.valueOf(page))
+                .create()
+                .getListUser(this, new APIClient.OnResponse<UserListResponse>() {
+                    @Override
+                    public void onRequestComplete(Response<UserListResponse> response) {
+                        // remove item progress bar after load more process is done!
+                        userList.remove(userList.size() - 1);
+
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Fetch more data successfully!", Toast.LENGTH_SHORT).show();
+                            userList.addAll(response.body().getListUser());
+                            adapter.setData(userList);
+
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to fetch more data!", Toast.LENGTH_SHORT).show();
+                        }
+                        adapter.setLoadMore(false);
+                    }
+
+                    @Override
+                    public void onRequestFailed(Throwable error) {
+                        Toast.makeText(getApplicationContext(), "Failed to fetch more data!", Toast.LENGTH_SHORT).show();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+    }
 
     /**
      * get called when user swipe down the view
      */
     @Override
     public void onRefresh() {
-        fetchData();
+        initData();
+        adapter.currentPage = 0;
     }
 }

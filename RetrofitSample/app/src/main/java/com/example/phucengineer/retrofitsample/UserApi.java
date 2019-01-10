@@ -1,12 +1,9 @@
 package com.example.phucengineer.retrofitsample;
 
-/*
- * Created by Phuc Engineer on 10/1/2018.
- */
-
+import com.example.phucengineer.retrofitsample.pojo.CreateUserResponse;
+import com.example.phucengineer.retrofitsample.pojo.LoginResponse;
 import com.example.phucengineer.retrofitsample.pojo.ResourceResponse;
 import com.example.phucengineer.retrofitsample.pojo.UserListResponse;
-import com.example.phucengineer.retrofitsample.pojo.CreateUserResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -29,9 +26,7 @@ import retrofit2.http.Query;
  * The @Field requires a mandatory parameter. In cases when @Field is optional, we can use @Query instead and pass a null value
  * The @Field only works with POST method
  */
-
-
-public interface APIInterface {
+public interface UserApi {
 
     /**
      * getListResource is a method name
@@ -40,9 +35,15 @@ public interface APIInterface {
      *
      * @return
      */
+    @FormUrlEncoded
+    @POST("/api/login")
+    Call<LoginResponse> login(@Field("email") String email,
+                              @Field("password") String pass);
+
     @GET("/api/unknown")
     Call<ResourceResponse> getListResource();
 
+    @FormUrlEncoded
     @POST("/api/users")
     Call<CreateUserResponse> createUser(@Body CreateUserResponse user);
 
@@ -51,6 +52,6 @@ public interface APIInterface {
 
     @FormUrlEncoded
     @POST("/api/users?")
-    Call<UserListResponse> doCreateUserWithField(@Field("name") String name, @Field("job") String job);
-
+    Call<UserListResponse> doCreateUserWithField(@Field("name") String name,
+                                                 @Field("job") String job);
 }

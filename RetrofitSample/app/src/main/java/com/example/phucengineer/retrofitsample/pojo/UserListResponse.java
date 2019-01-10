@@ -2,13 +2,13 @@ package com.example.phucengineer.retrofitsample.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 /*
  * Created by Phuc Engineer on 10/1/2018.
  */
-public class UserListResponse {
+public class UserListResponse implements Serializable {
 
     @SerializedName("page")
     private Integer page;
@@ -37,14 +37,9 @@ public class UserListResponse {
         this.perPage = perPage;
     }
 
-    public Integer getTotal() {
+    public Integer getTotalUser() {
         return total;
     }
-
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
-
     public Integer getTotalPages() {
         return totalPages;
     }

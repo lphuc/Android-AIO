@@ -2,10 +2,12 @@ package com.example.phucengineer.retrofitsample.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /*
  * Created by Phuc Engineer on 10/1/2018.
  */
-public class CreateUserResponse {
+public class CreateUserResponse implements Serializable {
     @SerializedName("name")
     private String name;
     @SerializedName("job")
